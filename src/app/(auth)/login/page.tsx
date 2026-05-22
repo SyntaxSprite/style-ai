@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import Logo from '@/components/logo';
+import { AuthLayout, AuthCardHeader } from '@/components/auth-layout';
 import { Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
@@ -53,54 +53,55 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <Card className="w-full max-w-sm">
-        <CardHeader className="text-center">
-            <Link href="/" className="flex items-center justify-center gap-2 mb-4" aria-label="ChapterCraft Home">
-                <Logo />
-                <h1 className="text-2xl font-bold text-primary">ChapterCraft</h1>
-            </Link>
-          <CardTitle>Welcome Back</CardTitle>
+    <AuthLayout title="Welcome Back" description="Enter your credentials to access your account.">
+      <Card className="app-card w-full shadow-card">
+        <CardHeader className="pb-4 text-center">
+          <AuthCardHeader />
+          <CardTitle className="text-xl sm:text-2xl">Welcome Back</CardTitle>
           <CardDescription>Enter your credentials to access your account.</CardDescription>
         </CardHeader>
         <form onSubmit={handleLogin}>
-            <CardContent className="space-y-4">
-            <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
+          <CardContent className="form-stack">
+            <div className="form-field">
+              <Label htmlFor="email">Email</Label>
+              <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="you@example.com"
                 required
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                />
+                className="h-11"
+              />
             </div>
-            <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input 
+            <div className="form-field">
+              <Label htmlFor="password">Password</Label>
+              <Input
                 id="password"
                 type="password"
                 required
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                />
+                className="h-11"
+              />
             </div>
-            </CardContent>
-            <CardFooter className="flex flex-col gap-4">
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Log In
-                </Button>
-                <p className="text-sm text-muted-foreground">
-                    Don&apos;t have an account?{' '}
-                    <Link href="/signup" className="font-semibold text-primary hover:underline">
-                        Sign up
-                    </Link>
-                </p>
-            </CardFooter>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-4 pt-2">
+            <Button type="submit" className="h-11 w-full" disabled={isLoading}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Log In
+            </Button>
+            <p className="text-center text-sm text-muted-foreground">
+              Don&apos;t have an account?{' '}
+              <Link href="/signup" className="font-semibold text-primary hover:underline">
+                Sign up
+              </Link>
+            </p>
+          </CardFooter>
         </form>
       </Card>
-    </div>
+    </AuthLayout>
   );
 }

@@ -13,10 +13,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <SidebarProvider>
         <div className="flex min-h-screen">
           <Sidebar>
-            <SidebarHeader>
-              <Link href="/dashboard" className="flex items-center gap-2 pl-2" aria-label="ChapterCraft Dashboard">
+            <SidebarHeader className="border-b border-sidebar-border/60">
+              <Link
+                href="/books"
+                className="flex items-center gap-2 rounded-lg px-2 py-1 transition-opacity hover:opacity-80"
+                aria-label="ChapterCraft Dashboard"
+              >
                 <Logo />
-                <span className="font-bold text-lg text-primary">ChapterCraft</span>
+                <span className="truncate text-lg font-bold text-primary">ChapterCraft</span>
               </Link>
             </SidebarHeader>
             <SidebarContent>
@@ -26,10 +30,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <UserInfo />
             </SidebarFooter>
           </Sidebar>
-          <SidebarInset>
+          <SidebarInset className="min-w-0">
             <Header />
-            <main className="p-4 lg:p-8 pt-0">
-                {children}
+            <main className="page-container safe-bottom pb-6 pt-4 sm:pb-8 sm:pt-6 lg:pb-10">
+              <div className="page-section">{children}</div>
             </main>
           </SidebarInset>
         </div>

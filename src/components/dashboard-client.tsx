@@ -199,17 +199,17 @@ export default function DashboardClient() {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="page-section">
        <div>
-        <Button variant="outline" asChild>
+        <Button variant="outline" size="sm" asChild className="h-10">
           <Link href="/books">
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back to Books
           </Link>
         </Button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 items-start">
-        <Card className="md:col-span-2 xl:col-span-1">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8 lg:items-start">
+        <Card className="app-card lg:col-span-1">
           <CardHeader>
             <CardTitle>Write a New Chapter</CardTitle>
             <CardDescription>
@@ -250,7 +250,7 @@ export default function DashboardClient() {
           </CardFooter>
         </Card>
         
-        <Card className="md:col-span-2 flex flex-col h-[70vh] lg:h-auto">
+        <Card className="app-card flex min-h-[min(70vh,32rem)] flex-col lg:col-span-2 lg:min-h-[36rem]">
           <CardHeader className="flex flex-row items-center justify-between">
               <div>
                   <CardTitle>Generated Chapter</CardTitle>

@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import Logo from '@/components/logo';
+import { AuthLayout, AuthCardHeader } from '@/components/auth-layout';
 import { Loader2 } from 'lucide-react';
 
 export default function SignupPage() {
@@ -69,66 +69,69 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-8">
-       <Card className="w-full max-w-sm">
-        <CardHeader className="text-center">
-            <Link href="/" className="flex items-center justify-center gap-2 mb-4" aria-label="ChapterCraft Home">
-                <Logo />
-                <h1 className="text-2xl font-bold text-primary">ChapterCraft</h1>
-            </Link>
-          <CardTitle>Create an Account</CardTitle>
+    <AuthLayout title="Create an Account" description="Start your writing journey with us today.">
+      <Card className="app-card w-full shadow-card">
+        <CardHeader className="pb-4 text-center">
+          <AuthCardHeader />
+          <CardTitle className="text-xl sm:text-2xl">Create an Account</CardTitle>
           <CardDescription>Start your writing journey with us today.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSignup}>
-            <CardContent className="space-y-4">
-             <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Input
+          <CardContent className="form-stack">
+            <div className="form-field">
+              <Label htmlFor="name">Name</Label>
+              <Input
                 id="name"
                 type="text"
                 placeholder="Your Name"
                 required
+                autoComplete="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                />
+                className="h-11"
+              />
             </div>
-            <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
+            <div className="form-field">
+              <Label htmlFor="email">Email</Label>
+              <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="you@example.com"
                 required
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                />
+                className="h-11"
+              />
             </div>
-            <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input 
+            <div className="form-field">
+              <Label htmlFor="password">Password</Label>
+              <Input
                 id="password"
                 type="password"
                 required
                 minLength={6}
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                />
+                className="h-11"
+              />
             </div>
-            </CardContent>
-            <CardFooter className="flex flex-col gap-4">
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Create Account
-                </Button>
-                <p className="text-sm text-muted-foreground">
-                    Already have an account?{' '}
-                    <Link href="/login" className="font-semibold text-primary hover:underline">
-                        Log in
-                    </Link>
-                </p>
-            </CardFooter>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-4 pt-2">
+            <Button type="submit" className="h-11 w-full" disabled={isLoading}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Create Account
+            </Button>
+            <p className="text-center text-sm text-muted-foreground">
+              Already have an account?{' '}
+              <Link href="/login" className="font-semibold text-primary hover:underline">
+                Log in
+              </Link>
+            </p>
+          </CardFooter>
         </form>
       </Card>
-    </div>
+    </AuthLayout>
   );
 }

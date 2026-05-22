@@ -9,7 +9,9 @@ export default auth((req) => {
     PUBLIC_ROUTES.includes(pathname) ||
     pathname.startsWith('/api/auth') ||
     pathname.startsWith('/_next') ||
-    pathname === '/favicon.ico';
+    pathname === '/favicon.ico' ||
+    pathname === '/favicon.svg' ||
+    pathname.startsWith('/icon');
 
   if (!req.auth && !isPublic) {
     const loginUrl = new URL('/login', req.nextUrl.origin);
@@ -18,7 +20,7 @@ export default auth((req) => {
   }
 
   if (req.auth && (pathname === '/login' || pathname === '/signup')) {
-    return NextResponse.redirect(new URL('/dashboard', req.nextUrl.origin));
+    return NextResponse.redirect(new URL('/books', req.nextUrl.origin));
   }
 
   return NextResponse.next();

@@ -150,16 +150,16 @@ export default function StyleProfileClient() {
   }
 
   return (
-    <div className="space-y-8">
-      <Card>
+    <div className="page-section">
+      <Card className="app-card">
         <CardHeader>
           <CardTitle>Onboarding: Define Your Writing Style</CardTitle>
           <CardDescription>Upload 1-3 documents (.pdf, .txt) of your past work. The first is required. The more you provide, the better we can match your style.</CardDescription>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <CardContent className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[0, 1, 2].map(index => (
-            <div key={index} className="flex flex-col items-center justify-center w-full">
-              <label htmlFor={`dropzone-file-${index}`} className={`flex flex-col items-center justify-center w-full h-56 border-2 border-dashed rounded-lg cursor-pointer bg-secondary/50 hover:bg-secondary relative ${files[index] ? 'border-primary' : ''}`}>
+            <div key={index} className="flex w-full flex-col items-center justify-center">
+              <label htmlFor={`dropzone-file-${index}`} className={`relative flex min-h-[12rem] w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed bg-secondary/50 transition-colors hover:bg-secondary sm:min-h-[14rem] ${files[index] ? 'border-primary' : 'border-border'}`}>
                 {files[index] ? (
                   <>
                     <div className="flex flex-col items-center justify-center p-4 text-center">
@@ -221,7 +221,7 @@ export default function StyleProfileClient() {
       )}
 
       {analysisResult && !isLoading && (
-        <Card>
+        <Card className="app-card">
           <CardHeader>
             <CardTitle>Your Writing Style Profile</CardTitle>
             <CardDescription>Here's what we learned about your writing. This profile will be used to generate chapters in your voice.</CardDescription>

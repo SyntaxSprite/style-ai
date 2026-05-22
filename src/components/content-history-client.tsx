@@ -11,7 +11,8 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Eye, Copy, Trash2 } from "lucide-react";
+import { MoreHorizontal, Eye, Copy, Trash2, ChevronLeft } from "lucide-react";
+import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -163,29 +164,94 @@ export default function ContentHistoryClient() {
       )
   }
 
+  const getChapterTitle = (item: GeneratedContent) =>
+    item.prompt.split('\n')[0].replace('Title: ', '') || `Chapter ${item.id}`;
+
+  const ChapterActions = ({ item }: { item: GeneratedContent }) => (
+    <AlertDialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button aria-haspopup="true" size="icon" variant="ghost" className="touch-target shrink-0">
+            <MoreHorizontal className="h-4 w-4" />
+            <span className="sr-only">Actions</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem onSelect={() => handleView(item)}>
+            <Eye className="mr-2 h-4 w-4" />
+            View
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => handleCopy(item)}>
+            <Copy className="mr-2 h-4 w-4" />
+            Copy
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <AlertDialogTrigger asChild>
+            <DropdownMenuItem
+              className="text-destructive focus:text-destructive"
+              onSelect={(e) => e.preventDefault()}
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete
+            </DropdownMenuItem>
+          </AlertDialogTrigger>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete this chapter from your
+            book&apos;s history.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="flex-col-reverse gap-2 sm:flex-row">
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => handleDelete(item.id!)}
+            className="bg-destructive hover:bg-destructive/90"
+          >
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+
   return (
     <>
-    <Card>
+    <div className="page-section">
+      <Button variant="outline" size="sm" asChild className="h-10 w-fit">
+        <Link href="/books">
+          <ChevronLeft className="mr-2 h-4 w-4" />
+          Back to Books
+        </Link>
+      </Button>
+
+    <Card className="app-card">
       <CardHeader>
-        <CardTitle>Chapters for: {book.title}</CardTitle>
+        <CardTitle className="text-xl sm:text-2xl">Chapters: {book.title}</CardTitle>
         <CardDescription>
           Browse and manage your previously generated chapters for this book.
         </CardDescription>
       </CardHeader>
       <CardContent>
         {contentHistory.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="rounded-lg border border-dashed py-12 text-center text-muted-foreground">
               No chapters written for this book yet.
             </div>
           ) : (
+          <>
+          <div className="hidden overflow-x-auto md:block">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Chapter</TableHead>
+                <TableHead className="w-16">#</TableHead>
                 <TableHead>Title</TableHead>
                 <TableHead>Type</TableHead>
-                <TableHead>Generated on</TableHead>
-                <TableHead>
+                <TableHead>Generated</TableHead>
+                <TableHead className="w-12">
                   <span className="sr-only">Actions</span>
                 </TableHead>
               </TableRow>
@@ -194,65 +260,47 @@ export default function ContentHistoryClient() {
               {contentHistory.map((item, index) => (
                 <TableRow key={item.id}>
                    <TableCell className="font-medium">{index + 1}</TableCell>
-                  <TableCell className="font-medium">{item.prompt.split('\n')[0].replace('Title: ', '') || `Chapter ${item.id}`}</TableCell>
+                  <TableCell className="max-w-[200px] truncate font-medium lg:max-w-xs">{getChapterTitle(item)}</TableCell>
                    <TableCell>
                     <Badge variant="outline">{item.contentType}</Badge>
                   </TableCell>
-                  <TableCell>{new Date(item.createdAt).toLocaleDateString()}</TableCell>
+                  <TableCell className="whitespace-nowrap">{new Date(item.createdAt).toLocaleDateString()}</TableCell>
                   <TableCell>
-                    <AlertDialog>
-                        <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button aria-haspopup="true" size="icon" variant="ghost">
-                            <MoreHorizontal className="h-4 w-4" />
-                            <span className="sr-only">Toggle menu</span>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem onSelect={() => handleView(item)}>
-                                <Eye className="mr-2 h-4 w-4" />
-                                View
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => handleCopy(item)}>
-                                <Copy className="mr-2 h-4 w-4" />
-                                Copy
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <AlertDialogTrigger asChild>
-                                <DropdownMenuItem className="text-destructive focus:text-destructive" onSelect={(e) => e.preventDefault()}>
-                                    <Trash2 className="mr-2 h-4 w-4" />
-                                    Delete
-                                </DropdownMenuItem>
-                            </AlertDialogTrigger>
-                        </DropdownMenuContent>
-                        </DropdownMenu>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                This action cannot be undone. This will permanently delete this chapter
-                                from your book's history.
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDelete(item.id!)} className="bg-destructive hover:bg-destructive/90">
-                                    Delete
-                                </AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
+                    <ChapterActions item={item} />
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
+          </div>
+
+          <div className="space-y-3 md:hidden">
+            {contentHistory.map((item, index) => (
+              <div
+                key={item.id}
+                className="flex items-start justify-between gap-3 rounded-xl border border-border bg-card p-4 shadow-soft"
+              >
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-medium text-muted-foreground">Chapter {index + 1}</p>
+                  <p className="truncate font-semibold">{getChapterTitle(item)}</p>
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <Badge variant="outline">{item.contentType}</Badge>
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(item.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+                <ChapterActions item={item} />
+              </div>
+            ))}
+          </div>
+          </>
         )}
       </CardContent>
     </Card>
+    </div>
     <Dialog open={isViewOpen} onOpenChange={setIsViewOpen}>
-        <DialogContent className="sm:max-w-3xl">
+        <DialogContent className="max-h-[90vh] w-[calc(100vw-2rem)] overflow-y-auto sm:max-w-3xl">
             <DialogHeader>
                 <DialogTitle>{selectedContent?.prompt.split('\n')[0].replace('Title: ', '')}</DialogTitle>
                 <DialogDescription>

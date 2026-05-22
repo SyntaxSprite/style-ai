@@ -26,6 +26,7 @@ import { useAuth } from '@/components/auth-provider';
 import { Skeleton } from './ui/skeleton';
 import Image from 'next/image';
 import { ScrollArea } from './ui/scroll-area';
+import { PageHeader } from '@/components/page-header';
 
 const fileToDataURI = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -174,56 +175,50 @@ export default function BooksClient() {
   }
 
   return (
-    <div className="space-y-8">
-       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">My Books</h1>
-              <p className="text-muted-foreground">Your personal library. Click a book to start writing.</p>
-            </div>
-            <DialogTrigger asChild>
-              <Button className="w-full sm:w-auto" onClick={() => setIsDialogOpen(true)}>
-                <PlusCircle className="mr-2 h-4 w-4" />
-                New Book
-              </Button>
-            </DialogTrigger>
-          </div>
-          <DialogContent className="sm:max-w-xl">
+    <div className="page-section">
+      <PageHeader
+        title="My Books"
+        description="Your personal library. Tap a book to start writing."
+      >
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="w-full sm:w-auto" onClick={() => setIsDialogOpen(true)}>
+              <PlusCircle className="mr-2 h-4 w-4" />
+              New Book
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
             <DialogHeader>
               <DialogTitle>Create a New Book</DialogTitle>
               <DialogDescription>
                 Provide the blueprint for your new story. You can change this later.
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="title" className="text-right">Title</Label>
-                <Input id="title" value={newBook.title} onChange={handleInputChange} className="col-span-3" />
+            <div className="form-stack py-4">
+              <div className="form-field">
+                <Label htmlFor="title">Title</Label>
+                <Input id="title" value={newBook.title} onChange={handleInputChange} className="h-11" />
               </div>
-              <div className="grid grid-cols-4 items-start gap-4">
-                <Label htmlFor="blurb" className="text-right pt-2">Blurb</Label>
-                <Textarea id="blurb" value={newBook.blurb} onChange={handleInputChange} className="col-span-3" placeholder="A short, enticing summary of your book." />
+              <div className="form-field">
+                <Label htmlFor="blurb">Blurb</Label>
+                <Textarea id="blurb" value={newBook.blurb} onChange={handleInputChange} placeholder="A short, enticing summary of your book." rows={3} />
               </div>
-              <div className="grid grid-cols-4 items-start gap-4">
-                <Label htmlFor="outline" className="text-right pt-2">Outline</Label>
-                <Textarea id="outline" value={newBook.outline} onChange={handleInputChange} className="col-span-3" placeholder="A high-level outline of your story's plot points."/>
+              <div className="form-field">
+                <Label htmlFor="outline">Outline</Label>
+                <Textarea id="outline" value={newBook.outline} onChange={handleInputChange} placeholder="A high-level outline of your story's plot points." rows={4} />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="coverImage" className="text-right">Cover</Label>
-                  <div className="col-span-3">
-                      <Input id="coverImage" type="file" accept="image/*" onChange={handleCoverImageChange} />
-                  </div>
+              <div className="form-field">
+                <Label htmlFor="coverImage">Cover image</Label>
+                <Input id="coverImage" type="file" accept="image/*" onChange={handleCoverImageChange} />
               </div>
-               {newBook.coverImage && (
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <div className="col-start-2 col-span-3">
-                    <p className="text-sm text-muted-foreground mb-2">Cover Preview:</p>
-                    <Image src={newBook.coverImage} alt="Cover preview" width={150} height={225} className="rounded-md object-cover aspect-[2/3]" />
-                  </div>
+              {newBook.coverImage && (
+                <div>
+                  <p className="mb-2 text-sm text-muted-foreground">Cover preview</p>
+                  <Image src={newBook.coverImage} alt="Cover preview" width={120} height={180} className="aspect-[2/3] rounded-lg object-cover shadow-soft" />
                 </div>
               )}
             </div>
-            <DialogFooter>
+            <DialogFooter className="flex-col-reverse gap-2 sm:flex-row">
                <DialogClose asChild>
                 <Button type="button" variant="secondary">
                   Cancel
@@ -235,10 +230,11 @@ export default function BooksClient() {
               </Button>
             </DialogFooter>
           </DialogContent>
-          <CardFooter/>
+        </Dialog>
+      </PageHeader>
 
-          {books.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
+      {books.length > 0 ? (
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6 lg:gap-y-10">
               {books.map((book) => (
                 <div key={book.id} className="group relative">
                     <div className="relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-secondary shadow-lg group-hover:shadow-2xl transition-shadow duration-300">
@@ -259,19 +255,19 @@ export default function BooksClient() {
                          </Badge>
                     </div>
                     
-                     <div className="mt-4 flex flex-col gap-2">
-                         <Button asChild className="w-full">
+                     <div className="mt-3 flex flex-col gap-2 sm:mt-4">
+                         <Button asChild className="h-10 w-full">
                           <Link href={`/write?bookId=${book.id}`}><Edit className="mr-2 h-4 w-4" /> Write</Link>
                         </Button>
-                        <div className="flex gap-2">
-                            <Button asChild variant="outline" className="flex-1">
-                                <Link href={`/content-history?bookId=${book.id}`}><BookOpen className="mr-2 h-4 w-4" /> Chapters</Link>
+                        <div className="grid grid-cols-2 gap-2">
+                            <Button asChild variant="outline" className="h-10">
+                                <Link href={`/content-history?bookId=${book.id}`}><BookOpen className="mr-2 h-4 w-4 shrink-0" /><span className="truncate">Chapters</span></Link>
                             </Button>
                             <Dialog>
                                 <DialogTrigger asChild>
-                                    <Button variant="outline" className="flex-1">Details</Button>
+                                    <Button variant="outline" className="h-10 w-full">Details</Button>
                                 </DialogTrigger>
-                                <DialogContent className="sm:max-w-2xl">
+                                <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
                                     <DialogHeader>
                                         <DialogTitle>{book.title}</DialogTitle>
                                         <DialogDescription asChild>
@@ -310,7 +306,7 @@ export default function BooksClient() {
               ))}
             </div>
           ) : (
-             <div className="flex flex-col items-center justify-center text-center py-20 border-2 border-dashed rounded-lg bg-secondary/50">
+             <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-secondary/50 px-6 py-16 text-center sm:py-20">
               <BookImage className="w-16 h-16 text-muted-foreground/50 mb-4" />
               <h3 className="text-xl font-semibold">Your Library is Empty</h3>
               <p className="text-muted-foreground mt-2 max-w-sm">You haven't created any books yet. Click the "New Book" button to start your first story and bring your ideas to life.</p>
@@ -320,7 +316,6 @@ export default function BooksClient() {
                 </Button>
             </div>
           )}
-      </Dialog>
     </div>
   );
 }
