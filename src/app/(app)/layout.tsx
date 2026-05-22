@@ -30,11 +30,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <UserInfo />
             </SidebarFooter>
           </Sidebar>
-          <SidebarInset className="min-w-0">
+          <SidebarInset className="flex min-w-0 flex-1 flex-col">
             <Header />
-            <main className="page-container safe-bottom pb-6 pt-2 sm:pb-8 sm:pt-4 lg:pb-10 [&:has(.epic-realm)]:px-0 [&:has(.epic-realm)]:pt-0">
+            <div className="page-container safe-bottom w-full flex-1 pb-6 pt-4 sm:pb-8 sm:pt-6 lg:pb-10">
               {children}
-            </main>
+            </div>
           </SidebarInset>
         </div>
       </SidebarProvider>

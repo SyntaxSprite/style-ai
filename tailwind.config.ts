@@ -23,19 +23,9 @@ export default {
       fontFamily: {
         body: ['Inter', 'sans-serif'],
         headline: ['Inter', 'sans-serif'],
-        display: ['Cinzel', 'serif'],
-        epic: ['Cormorant Garamond', 'Georgia', 'serif'],
         code: ['monospace'],
       },
       colors: {
-        epic: {
-          ink: 'hsl(var(--epic-ink))',
-          parchment: 'hsl(var(--epic-parchment))',
-          gold: 'hsl(var(--epic-gold))',
-          crimson: 'hsl(var(--epic-crimson))',
-          shadow: 'hsl(var(--epic-shadow))',
-          veil: 'hsl(var(--epic-veil))',
-        },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -113,25 +103,10 @@ export default {
             height: '0',
           },
         },
-        'epic-shimmer': {
-          '0%, 100%': { opacity: '0.85' },
-          '50%': { opacity: '1' },
-        },
-        'epic-float': {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-6px)' },
-        },
-        'epic-flicker': {
-          '0%, 100%': { opacity: '0.4' },
-          '50%': { opacity: '0.7' },
-        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'epic-shimmer': 'epic-shimmer 4s ease-in-out infinite',
-        'epic-float': 'epic-float 6s ease-in-out infinite',
-        'epic-flicker': 'epic-flicker 3s ease-in-out infinite',
       },
     },
   },
