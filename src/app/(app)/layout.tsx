@@ -32,7 +32,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </Sidebar>
           <SidebarInset className="min-w-0">
             <Header />
-            <main className="page-container safe-bottom pb-6 pt-4 sm:pb-8 sm:pt-6 lg:pb-10">
+            <main className="page-container safe-bottom pb-6 pt-2 sm:pb-8 sm:pt-4 lg:pb-10 [&:has(.epic-realm)]:px-0 [&:has(.epic-realm)]:pt-0">
               {children}
             </main>
           </SidebarInset>
