@@ -39,7 +39,7 @@ export default function LoginPage() {
       }
 
       toast({ title: 'Login Successful!' });
-      router.push('/dashboard');
+      router.push('/books');
       router.refresh();
     } catch {
       toast({

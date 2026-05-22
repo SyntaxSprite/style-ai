@@ -112,7 +112,7 @@ export default function Home() {
 
       <footer className="border-t border-border/60 bg-card/50 py-8">
         <div className="page-container text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} ChapterCraft. All rights reserved.</p>
+          <p>&copy; 2026 ChapterCraft. All rights reserved.</p>
         </div>
       </footer>
     </div>

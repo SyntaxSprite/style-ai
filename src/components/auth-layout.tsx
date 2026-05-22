@@ -14,7 +14,7 @@ export function AuthLayout({ children, title, description }: AuthLayoutProps) {
       <div className="absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-primary/20 blur-3xl" aria-hidden />
       <div className="relative w-full max-w-md">{children}</div>
       <p className="relative mt-8 text-center text-xs text-muted-foreground">
-        &copy; {new Date().getFullYear()} ChapterCraft
+        &copy; 2026 ChapterCraft
       </p>
     </div>
   );
