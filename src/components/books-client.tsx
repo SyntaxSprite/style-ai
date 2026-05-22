@@ -18,7 +18,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { PlusCircle, Edit, Loader2, BookImage, BookOpen, Upload } from 'lucide-react';
 import Link from 'next/link';
-import { addBook, updateBookStatus, getBooks, type Book as BookType } from '@/services/firestore';
+import { addBook, updateBookStatus, getBooks, type Book as BookType } from '@/services/data';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from './ui/badge';
 import { Switch } from './ui/switch';
@@ -54,7 +54,7 @@ export default function BooksClient() {
       const fetchBooks = async () => {
         setIsFetchingBooks(true);
         try {
-          const userBooks = await getBooks(user.uid);
+          const userBooks = await getBooks();
           setBooks(userBooks);
         } catch (error) {
           console.error("Error fetching books:", error);
@@ -110,9 +110,9 @@ export default function BooksClient() {
     }
     setIsLoading(true);
     try {
-      const bookData = { ...newBook, status: 'ongoing' as const, userId: user.uid };
+      const bookData = { ...newBook, status: 'ongoing' as const };
       const newBookId = await addBook(bookData);
-      setBooks([{ ...bookData, id: newBookId, createdAt: new Date() }, ...books]);
+      setBooks([{ ...bookData, id: newBookId, createdAt: new Date(), userId: user.id }, ...books]);
       setNewBook(INITIAL_BOOK_STATE);
       setIsDialogOpen(false);
       toast({
@@ -135,7 +135,7 @@ export default function BooksClient() {
     if (!user) return;
     const newStatus = currentStatus === 'ongoing' ? 'completed' : 'ongoing';
     try {
-        await updateBookStatus(user.uid, bookId, newStatus);
+        await updateBookStatus(bookId, newStatus);
         setBooks(books.map(b => b.id === bookId ? {...b, status: newStatus} : b));
         toast({
             title: "Status Updated",

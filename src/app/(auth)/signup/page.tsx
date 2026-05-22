@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { signIn } from 'next-auth/react';
+import { registerUser } from '@/actions/auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -25,19 +25,46 @@ export default function SignupPage() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      await updateProfile(userCredential.user, { displayName: name });
+      const result = await registerUser(name, email, password);
 
-      toast({ title: 'Account Created!', description: 'Welcome to ChapterCraft. Let\'s define your writing style.' });
-      router.push('/style-profile'); // Redirect to onboarding
-    } catch (error: any) {
+      if (!result.success) {
+        toast({
+          title: 'Sign-up Failed',
+          description: result.error,
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const signInResult = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (signInResult?.error) {
+        toast({
+          title: 'Account Created',
+          description: 'Please log in with your new credentials.',
+        });
+        router.push('/login');
+        return;
+      }
+
+      toast({
+        title: 'Account Created!',
+        description: "Welcome to ChapterCraft. Let's define your writing style.",
+      });
+      router.push('/style-profile');
+      router.refresh();
+    } catch {
       toast({
         title: 'Sign-up Failed',
-        description: error.message,
+        description: 'An unexpected error occurred.',
         variant: 'destructive',
       });
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
 

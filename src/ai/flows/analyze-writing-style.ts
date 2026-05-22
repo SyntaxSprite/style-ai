@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * @fileOverview Analyzes user-uploaded writing samples using Google's Gemini API to create a custom writing profile and saves it to Firestore.
+ * @fileOverview Analyzes user-uploaded writing samples using Google's Gemini API to create a custom writing profile and saves it to Postgres.
  *
  * - analyzeWritingStyle - A function that handles the writing style analysis process.
  * - AnalyzeWritingStyleInput - The input type for the analyzeWritingstyle function.
@@ -10,12 +10,11 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { saveStyleProfile } from '@/services/firestore';
+import { saveStyleProfile } from '@/services/data';
 import { extractTextFromFile } from './extract-text-from-file';
 
 
 const AnalyzeWritingStyleInputSchema = z.object({
-  userId: z.string().describe('The ID of the user.'),
   fileDataUris: z
     .array(z.string())
     .describe('An array of file contents as data URIs.'),
@@ -81,7 +80,7 @@ const analyzeWritingStyleFlow = ai.defineFlow(
     inputSchema: AnalyzeWritingStyleInputSchema,
     outputSchema: AnalyzeWritingStyleOutputSchema,
   },
-  async ({userId, fileDataUris}) => {
+  async ({ fileDataUris }) => {
     
     const textExtractionPromises = fileDataUris.map(uri => 
       extractTextFromFile({ fileDataUri: uri }).catch(e => {
@@ -103,7 +102,7 @@ const analyzeWritingStyleFlow = ai.defineFlow(
       throw new Error('Failed to analyze writing style.');
     }
     
-    await saveStyleProfile(userId, output);
+    await saveStyleProfile(output);
     return output;
   }
 );

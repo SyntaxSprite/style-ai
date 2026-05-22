@@ -1,13 +1,12 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { createContext, useContext, useEffect, ReactNode } from 'react';
+import { SessionProvider, useSession } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 
 interface AuthContextType {
-  user: User | null;
+  user: { id: string; name?: string | null; email?: string | null; image?: string | null } | null;
   loading: boolean;
 }
 
@@ -16,20 +15,12 @@ const AuthContext = createContext<AuthContextType>({ user: null, loading: true }
 const AUTH_ROUTES = ['/login', '/signup'];
 const PUBLIC_ROUTES = ['/', ...AUTH_ROUTES];
 
-export default function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+function AuthGuard({ children }: { children: ReactNode }) {
+  const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
+  const loading = status === 'loading';
+  const user = session?.user ?? null;
 
   useEffect(() => {
     if (loading) return;
@@ -38,13 +29,10 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
 
     if (user && isAuthRoute) {
-        // If user is logged in, redirect from auth pages to dashboard
-        router.push('/dashboard');
+      router.push('/dashboard');
     } else if (!user && !isPublicRoute) {
-        // If user is not logged in and not on a public route, redirect to login
-        router.push('/login');
+      router.push('/login');
     }
-
   }, [user, loading, router, pathname]);
 
   if (loading && !PUBLIC_ROUTES.includes(pathname)) {
@@ -57,8 +45,16 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider value={{ user, loading }}>
-        {children}
+      {children}
     </AuthContext.Provider>
+  );
+}
+
+export default function AuthProvider({ children }: { children: ReactNode }) {
+  return (
+    <SessionProvider>
+      <AuthGuard>{children}</AuthGuard>
+    </SessionProvider>
   );
 }
 

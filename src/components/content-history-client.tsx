@@ -39,7 +39,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { useState, useEffect } from "react";
-import { getContentHistory, getBook, deleteContent, type Book, type GeneratedContent } from "@/services/firestore";
+import { getContentHistory, getBook, deleteContent, type Book, type GeneratedContent } from "@/services/data";
 import { useAuth } from "./auth-provider";
 import { useSearchParams, notFound } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
@@ -75,8 +75,8 @@ export default function ContentHistoryClient() {
         setIsLoading(true);
         try {
             const [history, bookData] = await Promise.all([
-                getContentHistory(user.uid, bookId),
-                getBook(user.uid, bookId),
+                getContentHistory(bookId),
+                getBook(bookId),
             ]);
             
             if (!bookData) {
@@ -114,7 +114,7 @@ export default function ContentHistoryClient() {
   const handleDelete = async (contentId: string) => {
     if (!user) return;
     try {
-        await deleteContent(user.uid, contentId);
+        await deleteContent(contentId);
         setContentHistory(contentHistory.filter(c => c.id !== contentId));
         toast({ title: "Chapter Deleted", description: "The chapter has been permanently removed." });
     } catch (error) {

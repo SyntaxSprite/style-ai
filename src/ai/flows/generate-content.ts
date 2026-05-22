@@ -8,7 +8,7 @@
  */
 
 import {ai} from '@/ai/genkit';
-import { getStyleProfile, saveGeneratedContent, getBook, getContentHistory } from '@/services/firestore';
+import { getStyleProfile, saveGeneratedContent, getBook, getContentHistory } from '@/services/data';
 import {z} from 'genkit';
 import MistralClient from '@mistralai/mistralai';
 import { config } from 'dotenv';
@@ -18,7 +18,6 @@ config(); // Load environment variables
 const mistralClient = new MistralClient(process.env.MISTRAL_API_KEY || "your_mistral_api_key_here");
 
 const GenerateContentInputSchema = z.object({
-  userId: z.string().describe('The ID of the user.'),
   bookId: z.string().describe('The ID of the book.'),
   prompt: z.string().describe('The prompt for the story chapter.'),
   contentType: z.string().describe('The type of content to generate, e.g., "Chapter".'),
@@ -35,9 +34,9 @@ export type GenerateContentOutput = z.infer<typeof GenerateContentOutputSchema>;
 
 export async function generateContent(input: GenerateContentInput): Promise<GenerateContentOutput> {
   const [styleProfile, book, history] = await Promise.all([
-      getStyleProfile(input.userId),
-      getBook(input.userId, input.bookId),
-      getContentHistory(input.userId, input.bookId)
+      getStyleProfile(),
+      getBook(input.bookId),
+      getContentHistory(input.bookId)
   ]);
   
   if (!book) {
@@ -151,7 +150,6 @@ export const acceptContent = ai.defineFlow(
   {
     name: 'acceptContentFlow',
     inputSchema: z.object({
-      userId: z.string(),
       bookId: z.string(),
       prompt: z.string(),
       generatedText: z.string(),
@@ -161,8 +159,8 @@ export const acceptContent = ai.defineFlow(
       contentId: z.string(),
     }),
   },
-  async ({ userId, bookId, prompt, generatedText, contentType }) => {
-    const contentId = await saveGeneratedContent(userId, {
+  async ({ bookId, prompt, generatedText, contentType }) => {
+    const contentId = await saveGeneratedContent({
       bookId,
       prompt,
       generatedText,

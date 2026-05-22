@@ -14,7 +14,7 @@ StyleAI is a cutting-edge AI-powered writing tool designed to revolutionize your
 *   **User Style Profiles:** Create and manage different writing style profiles to suit various projects and audiences.
 *   **Document Support:** Supports importing and exporting content in various formats, including DOCX and PDF.
 *   **Dashboard Analytics:** Visualize your writing progress and track key metrics with interactive charts.
-*   **Authentication and Authorization:** Secure user authentication and authorization powered by Firebase.
+*   **Authentication and Authorization:** Secure email/password authentication powered by Auth.js.
 
 ## Tech Stack
 
@@ -31,17 +31,28 @@ StyleAI is a cutting-edge AI-powered writing tool designed to revolutionize your
     *   [Google AI](https://ai.google/): Access to Google's powerful AI models
     *   [Mistral AI](https://mistral.ai/): Cutting-edge AI models for various natural language processing tasks
 *   **Backend/Database:**
-    *   [Firebase](https://firebase.google.com/): Cloud-based platform for authentication, database (Firestore), and hosting
+    *   [Neon](https://neon.tech/): Serverless PostgreSQL
+    *   [Drizzle ORM](https://orm.drizzle.team/): Type-safe database access
+    *   [Auth.js](https://authjs.dev/) (NextAuth v5): Session-based authentication
 *   **Deployment:**
-    *   [Firebase App Hosting](https://firebase.google.com/docs/hosting): Fast and secure web hosting
+    *   Compatible with Vercel, Firebase App Hosting, or any Node.js host
 
 ## Getting Started
 
 **Note: This application is under development and may not be fully functional.**
 
 1.  **Prerequisites:**
-    *   [Node.js](https://nodejs.org/) (v18 or higher) and npm (Node Package Manager)
-    *   [Firebase Account](https://firebase.google.com/) and Firebase CLI
+    *   [Node.js](https://nodejs.org/) (v18 or higher) and npm
+    *   A [Neon](https://neon.tech/) project with a pooled connection string
 2.  **Installation:**
-    Clone the repository and install dependencies
+    ```bash
+    git clone <repo-url>
+    cd style-ai
+    npm install
+    cp .env.example .env.local
+    # Fill in DATABASE_URL, AUTH_SECRET, AUTH_URL, and AI API keys
+    npm run db:migrate
+    npm run dev
+    ```
+    The app runs at `http://localhost:9002`.
 

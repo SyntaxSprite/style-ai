@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { generateContent, acceptContent } from '@/ai/flows/generate-content';
 import { Sparkles, Loader2, Copy, BookOpen, ChevronLeft, Check, RefreshCcw } from 'lucide-react';
 import { Input } from './ui/input';
-import { getBook, type Book } from '@/services/firestore';
+import { getBook, type Book } from '@/services/data';
 import Link from 'next/link';
 import { useSearchParams, notFound } from 'next/navigation';
 import { useAuth } from './auth-provider';
@@ -51,7 +51,7 @@ export default function DashboardClient() {
     const fetchBook = async () => {
         setIsFetchingBook(true);
         try {
-            const bookData = await getBook(user.uid, bookId);
+            const bookData = await getBook(bookId);
             if (!bookData) {
                 notFound();
                 return;
@@ -94,7 +94,6 @@ export default function DashboardClient() {
 
     try {
       const result = await generateContent({
-        userId: user.uid,
         bookId: book.id,
         prompt: `Title: ${chapterTitle}\n\nPrompt: ${prompt}`,
         contentType: 'Chapter',
@@ -126,7 +125,6 @@ export default function DashboardClient() {
     setIsAccepting(true);
     try {
         await acceptContent({
-            userId: user.uid,
             bookId: book.id,
             prompt: `Title: ${chapterTitle}\n\nPrompt: ${prompt}`,
             generatedText,
