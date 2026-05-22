@@ -223,9 +223,9 @@ export default function ContentHistoryClient() {
     <>
     <div className="page-section">
       <Button variant="outline" size="sm" asChild className="h-10 w-fit">
-        <Link href="/books">
+        <Link href="/dashboard">
           <ChevronLeft className="mr-2 h-4 w-4" />
-          Back to Books
+          Dashboard
         </Link>
       </Button>
 

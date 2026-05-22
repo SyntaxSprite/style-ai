@@ -20,7 +20,7 @@ export default auth((req) => {
   }
 
   if (req.auth && (pathname === '/login' || pathname === '/signup')) {
-    return NextResponse.redirect(new URL('/books', req.nextUrl.origin));
+    return NextResponse.redirect(new URL('/dashboard', req.nextUrl.origin));
   }
 
   return NextResponse.next();

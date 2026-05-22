@@ -15,7 +15,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <Sidebar>
             <SidebarHeader className="border-b border-sidebar-border/60">
               <Link
-                href="/books"
+                href="/dashboard"
                 className="flex items-center gap-2 rounded-lg px-2 py-1 transition-opacity hover:opacity-80"
                 aria-label="ChapterCraft Dashboard"
               >
@@ -33,7 +33,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <SidebarInset className="min-w-0">
             <Header />
             <main className="page-container safe-bottom pb-6 pt-4 sm:pb-8 sm:pt-6 lg:pb-10">
-              <div className="page-section">{children}</div>
+              {children}
             </main>
           </SidebarInset>
         </div>

@@ -2,14 +2,14 @@
 
 import { usePathname } from 'next/navigation';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
-import { Bell } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 function getPageTitle(pathname: string): string {
+  if (pathname === '/dashboard') return 'Dashboard';
   if (pathname.startsWith('/write')) return 'Write Chapter';
   if (pathname.startsWith('/content-history')) return 'Chapter History';
   if (pathname === '/style-profile') return 'Writing Style';
-  if (pathname === '/books' || pathname === '/dashboard') return 'My Books';
+  if (pathname === '/books') return 'My Books';
   return 'ChapterCraft';
 }
 
@@ -18,17 +18,11 @@ export default function Header() {
   const title = getPageTitle(pathname);
 
   return (
-    <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-4 border-b bg-background/80 backdrop-blur-lg px-4 lg:px-8">
-      <div className="md:hidden">
-        <SidebarTrigger />
-      </div>
-      <h1 className="text-xl font-semibold">{title}</h1>
-      <div className="ml-auto flex items-center gap-2">
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <Bell className="h-5 w-5" />
-          <span className="sr-only">Toggle notifications</span>
-        </Button>
-      </div>
+    <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center gap-3 border-b border-border/60 bg-background/90 px-4 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 sm:h-16 sm:gap-4 sm:px-6 lg:px-8">
+      <SidebarTrigger className="touch-target md:hidden" />
+      <h1 className={cn('min-w-0 flex-1 truncate text-lg font-semibold tracking-tight sm:text-xl')}>
+        {title}
+      </h1>
     </header>
   );
 }

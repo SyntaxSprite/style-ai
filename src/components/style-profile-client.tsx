@@ -202,7 +202,7 @@ export default function StyleProfileClient() {
             {analysisResult ? 'Re-analyze Writing Style' : 'Analyze Writing Style'}
           </Button>
            {analysisResult && (
-            <Button onClick={() => router.push('/books')} variant="default" className="w-full sm:w-auto">
+            <Button onClick={() => router.push('/dashboard')} variant="default" className="w-full sm:w-auto">
               Continue to My Books
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
